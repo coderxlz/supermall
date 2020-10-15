@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import TabWrap from "../common/TabWrap";
+import TabWrap from "../common/navbar/TabWrap";
 import TabBarItem from "../content/TabBarItem";
 export default {
   name: "MainTabBar",
