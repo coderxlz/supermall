@@ -1,14 +1,14 @@
 <template>
-  <div class="productItem">
-        <a :href="itemData.link">
-          <div class="imgDiv"><img :src="itemData.show.img" alt="" class="itemImage"></div>
+  <div class="productItem" @click="productClick">
+      <a href="javascript:">
+          <div class="imgDiv"><img :src="itemData.show.img" alt="" class="itemImage" @load="loadOK"></div>
           <div><span class="itemTitle">{{itemData.title}}</span></div>
           <div class="textData">
             <span>{{itemData.price}}</span>
             <span class="icon"></span>
             <span class="favorite">{{itemData.cfav}}</span>
           </div>
-        </a>
+      </a>
   </div>
 
 </template>
@@ -23,6 +23,17 @@ name: "Product",
       return {}
     }
   }
+  },
+  methods:{
+  loadOK(){
+  //  往事件总线中发射事件
+    this.$bus.$emit('timeToRefresh');
+  },
+    //点击商品时，进入详情页面
+    productClick(){
+      console.log('进入商品详情页面');
+      this.$router.push('/detail/'+this.itemData.iid);
+    }
   }
 }
 </script>
@@ -60,7 +71,7 @@ name: "Product",
     display: inline-block;
     width: 14px;
     height: 14px;
-    background-image: url("../../assets/img/common/collect.svg");
+    background-image: url("../../../assets/img/common/collect.svg");
     background-size: contain;
     margin-left: 10px;
   }

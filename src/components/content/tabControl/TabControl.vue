@@ -43,8 +43,8 @@ name: "TabControl",
     background-color: #fff;
   /*  使用stickey设置控制栏吸附效果
    当top达到指定值时，stickey会自动变成fixed*/
-    position: sticky;
-    top:44px;
+    /*position: sticky;*/
+    /*top:44px;*/
   }
 
   .controlItem{

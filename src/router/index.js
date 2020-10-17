@@ -5,7 +5,7 @@ const Home = () => import('../views/home/Home');
 const Category = () => import('../views/category/Category');
 const Shop = ()=> import('../views/shop/Shop');
 const Profile = ()=> import('../views/profile/Profile');
-
+const Detail = () => import('../views/detail/Detail')
 Vue.use(Router)
 
 const routes = [
@@ -29,6 +29,11 @@ const routes = [
   {
     path:'/profile',
     component: Profile
+  },
+  //使用动态路由，动态传入商品id
+  {
+    path:'/detail/:iid',
+    component:Detail
   }
 ]
 

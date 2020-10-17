@@ -9,7 +9,6 @@ export function request(config){
   })
 
   instance1.interceptors.request.use((req) => {
-      console.log('拦截到request');
       return req;
   },
     (error => {
@@ -17,7 +16,6 @@ export function request(config){
     }))
 
   instance1.interceptors.response.use(rep => {
-      console.log('拦截到response');
       return rep;
   },
     error => {

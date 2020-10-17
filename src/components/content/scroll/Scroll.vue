@@ -27,7 +27,7 @@ name: "Scroll",
 
     this.bScroll.on('scroll',(position) => {
       this.yPosition = position.y;
-      this.$emit('ifShowBack',this.yPosition>-1000? false:true);
+      this.$emit('ifShowBack',this.yPosition);
     });
 
     this.bScroll.on('pullingUp',() => {
@@ -35,15 +35,17 @@ name: "Scroll",
       //完成上拉之前进行数据请求
       this.$emit('getMoreData');
       //加载完成数据之后调用betterScroll对象refresh方法，刷新数据，重新计算内容区高度
-      // setTimeout(() => {
-      //
-      // },1000)
-      this.bScroll.finishPullUp();
+
+      //使用setTimeout函数防止频繁执行下拉事件
+      setTimeout(() => {
+        this.bScroll.finishPullUp();
+      },300);
+
     });
 
   },
   methods:{
-    //传给betterScroll对象方法scrollTo的三个参数，分别为x,y,time，timem默认值为300
+    //传给betterScroll对象方法scrollTo的三个参数，分别为x,y,time，time默认值为300
     backTop(x,y,time=300){
       this.bScroll.scrollTo(x,y,time);
     }

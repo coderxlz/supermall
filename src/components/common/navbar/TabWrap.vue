@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import TabBarItem from "../../content/TabBarItem";
+import TabBarItem from "../../content/bottomTabBar/TabBarItem";
 export default {
 name: "TabWrap",
   components:{

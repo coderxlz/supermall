@@ -6,7 +6,6 @@
 
 <script>
 import ProductItem from "./ProductItem";
-import BetterScroll from "better-scroll";
 export default {
 name: "ProductWrap",
   components:{
