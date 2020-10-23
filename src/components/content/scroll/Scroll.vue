@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap" ref="wrap">
+  <div ref="wrap" class="wrap">
     <div class="content">
       <slot></slot>
     </div>
@@ -27,19 +27,23 @@ name: "Scroll",
 
     this.bScroll.on('scroll',(position) => {
       this.yPosition = position.y;
+      // console.log(position.y);
       this.$emit('ifShowBack',this.yPosition);
+
+      //将y轴距离实时船到detail页面之中
+      this.$emit('changeTabControl',this.yPosition);
     });
 
     this.bScroll.on('pullingUp',() => {
       console.log('上拉加载更多');
-      //完成上拉之前进行数据请求
+      //home主页完成上拉之前进行数据请求
       this.$emit('getMoreData');
-      //加载完成数据之后调用betterScroll对象refresh方法，刷新数据，重新计算内容区高度
 
       //使用setTimeout函数防止频繁执行下拉事件
+      //每3s只能触发一次下拉
       setTimeout(() => {
         this.bScroll.finishPullUp();
-      },300);
+      },3000);
 
     });
 
@@ -55,11 +59,5 @@ name: "Scroll",
 </script>
 
 <style scoped>
-  .wrap{
-    overflow: hidden;
-    position: absolute;
-    top: 44px;
-    bottom: 49px;
-  }
 
 </style>

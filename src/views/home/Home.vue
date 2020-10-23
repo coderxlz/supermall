@@ -8,17 +8,24 @@
         :tabs = 'tabs' @productChange="productChange"
         class="tabCon"
         ref = tab1
-        v-show="showTabControl"></tab-control>
+        v-show="showTabControl"
+        @beforeChange="beforeChange"></tab-control>
 
-   <scroll ref="scroll" @ifShowBack = 'ifButtonShow' @getMoreData = 'getMoreData'>
+   <scroll ref="scroll"
+           @ifShowBack = 'ifShowBack'
+           @getMoreData = 'getMoreData'
+           id="scrollWrap">
         <home-swiper :my-banners="banners" @swiperDone = 'swiperDone'></home-swiper>
         <recommend :recommends="recommends"></recommend>
         <image-view></image-view>
-        <tab-control :tabs = 'tabs' @productChange="productChange" ref = 'tab2'></tab-control>
+        <tab-control :tabs = 'tabs'
+                     @productChange="productChange"
+                     ref = 'tab2'
+                     @beforeChange="beforeChange"></tab-control>
         <product-wrap :pro-lists="showProduct" class="productWrap"></product-wrap>
    </scroll>
     <!--使用native给组件绑定原生事件-->
-    <back-top @click.native="backClick" v-show="ifShow"></back-top>
+    <back-top @click.native="backClick" v-show="ifShow" ref="top"></back-top>
   </div>
 </template>
 
@@ -28,7 +35,6 @@ import HomeSwiper from './childcomponents/HomeSwiper';
 import Recommend from "./childcomponents/Recommend";
 import TabControl from "../../components/content/tabControl/TabControl";
 import ProductWrap from "../../components/content/product/ProductWrap";
-import BackTop from "../../components/content/backtop/BackTop";
 import NavBar from "components/common/navbar/NavBar";
 //引入图片组件
 import ImageView from "./childcomponents/ImageView";
@@ -36,13 +42,13 @@ import ImageView from "./childcomponents/ImageView";
 import Scroll from "../../components/content/scroll/Scroll";
 //网络请求相关
 import {getHomeMultiData,getControlMultiData} from "network/home";
-//引入防抖函数
-import {debounce} from "../../tools/utils";
+
+//引入混入对象
+import {mixin,backTop} from "../../tools/mixin";
 
 export default {
   name: "Home",
   components:{
-    BackTop,
     ProductWrap,
     TabControl,
     Recommend,
@@ -51,6 +57,8 @@ export default {
     ImageView,
     Scroll
   },
+  //使用混入对象
+  mixins:[mixin,backTop],
   data(){
     return {
       banners:[],
@@ -59,21 +67,22 @@ export default {
       controlData:{
         'pop':{
           page:0,
-          list:[]
+          list:[],
+          scrollPos:509
         },
         'new':{
           page:0,
-          list:[]
+          list:[],
+          scrollPos:509
         },
         'sell':{
           page:0,
-          list:[]
+          list:[],
+          scrollPos:509
         }
       },
       //保存目前显示的商品类型
       currentType:'pop',
-      //ifShow用来保存置顶图标是否显示
-      ifShow:false,
       //定义_this，存储this对象
       _this:{},
       //定义tabOffset,存储控制栏偏移距离
@@ -89,41 +98,13 @@ export default {
     this.getControlData('new',this.controlData.new.page);
     this.getControlData('sell',this.controlData.sell.page);
   },
-  mounted() {
-    //调用防抖函数
-    const refresh = this.debounce(this.refreshData,300);
 
-    // const refresh = this.throttle(this.$refs.scroll.bScroll.refresh,500);
-
-    // 在组件挂载到页面之后才可以使用$refs属性
-    // 监听item中图片加载完成
-    this.$bus.$on('timeToRefresh',() => {
-      refresh();
-    });
-
+  //Home组件被keep-alive包裹，可以使用deactivated，离开Home页面时，取消对全局事件刷新的监听
+  //$bus.$off('取消事件名称','对应回调函数')
+  deactivated() {
+    this.$bus.$off('timeToRefresh',this.itemRefresh);
   },
   methods:{
-    //性能优化
-    debounce,
-
-    //第二种方法创建节流函数，避免高频执行js代码
-    throttle(func,delay){
-      let timer = null;
-
-      return function(...args){
-        let aaa = this;
-        if(timer){
-          //如果存在timer，即存在计时器，返回不继续执行
-          return;
-        }
-        timer = setTimeout(() => {
-          func.call(aaa);
-          //进入计时器执行完一次刷新之后，清楚计时器
-          timer = null;
-        },delay)
-      }
-  },
-
     //获得信息栏数据
     getHomeData(){
       getHomeMultiData().then(res => {
@@ -148,31 +129,60 @@ export default {
       })
     },
 
+    //在改变商品类别之前，将原页面的滚动距离保存下来
+    beforeChange(beforeIndex){
+      switch (beforeIndex) {
+
+        case 0:this.controlData.pop.scrollPos = -this.posY;
+          console.log('保存pop页面距离'+this.controlData.pop.scrollPos);
+        break;
+
+        case 1:this.controlData.new.scrollPos = -this.posY;
+          console.log('保存new页面距离'+this.posY);
+        break;
+
+        case 2:this.controlData.sell.scrollPos = -this.posY;
+          console.log('保存sell页面距离'+this.posY);
+        break;
+
+      }
+    },
+
     //点击控制栏按钮时,改变当前显示的数据类型
     productChange(index){
       //实现两个控制栏状态同步，无论店家哪一个，两个控制栏的currentIndex始终保持相同
       this.$refs.tab1.currentIndex = index;
       this.$refs.tab2.currentIndex = index;
 
+
       switch (index) {
 
-        case 0: this.currentType = 'pop';break;
+        case 0: this.currentType = 'pop';
+        //在跳转到其他类别之前，保存当前类别滚动距离
+        this.$refs.scroll.bScroll.scrollTo(0,-this.controlData.pop.scrollPos);
+        break;
 
-        case 1: this.currentType = 'new';break;
+        case 1: this.currentType = 'new';
+          this.$refs.scroll.bScroll.scrollTo(0,-this.controlData.new.scrollPos);
+          break;
 
-        case 2: this.currentType = 'sell';break;
+        case 2: this.currentType = 'sell';
+          this.$refs.scroll.bScroll.scrollTo(0,-this.controlData.sell.scrollPos);
+          break;
 
       }
     },
 
-    /*回到顶部事件,通过ref拿到scroll对象，调用scroll对象中的方法*/
+    //回到顶部事件,通过ref拿到scroll对象，调用scroll对象中的方法
     backClick(){
       this.$refs.scroll.backTop(0,0,300);
     },
 
     // 控制backTop按钮是否显现
-    ifButtonShow(yPosition){
+    ifShowBack(yPosition){
       this.scrollPosition = Math.abs(yPosition);
+      //记录当前页面y方向滚动距离
+      this.posY = yPosition;
       this.ifShow = yPosition<=-1000;
     },
 
@@ -186,9 +196,11 @@ export default {
     refreshData(){
       //使用这种写法可以避免在bScroll组件还没被创建的时候就被调用refresh方法
       this.$refs.scroll && this.$refs.scroll.bScroll.refresh();
+      console.log('首页内容高度刷新');
     },
     //父组件接受处理轮播图图片加载完成事件，将控制栏offsetTop保存起来
     swiperDone(){
+      //使用$refs来获得组件，并结合$el来获取组件中的元素
       this.tabOffsetTop  = this.$refs.tab2.$el.offsetTop ;
       console.log(this.tabOffsetTop);
     }
@@ -200,7 +212,7 @@ export default {
       return this.controlData[this.currentType].list;
     },
 
-    //显示控制栏
+    //滚动到一定距离后显示控制栏
     showTabControl(){
       return this.scrollPosition >= this.tabOffsetTop;
     }
@@ -214,12 +226,6 @@ export default {
     color: #fff;
   }
 
-  .productWrap{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
   .tabCon{
     position: relative;
     top: 44px;
@@ -228,4 +234,10 @@ export default {
     z-index: 9;
   }
 
+  #scrollWrap{
+    overflow: hidden;
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+  }
 </style>

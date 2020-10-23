@@ -20,13 +20,20 @@ name: "TabControl",
   data(){
     return {
       currentIndex:0,
+      beforeIndex:0
     }
   },
 
   methods:{
     itemClick(index){
+      //记录原来的页面索引值
+      this.beforeIndex = this.currentIndex;
       this.currentIndex = index;
+      //向父组件发射事件，让父组件在页面改变前保存当前页面的滚动距离
+      this.$emit('beforeChange',this.beforeIndex);
+      //向父组件发射事件，用户点击控制栏按钮，index值改变，显示商品改变
       this.$emit('productChange',index);
+
     }
   }
 }
@@ -41,8 +48,8 @@ name: "TabControl",
     text-align: center;
     justify-content: space-around;
     background-color: #fff;
-  /*  使用stickey设置控制栏吸附效果
-   当top达到指定值时，stickey会自动变成fixed*/
+  /*  使用sticky设置控制栏吸附效果
+   当top达到指定值时，sticky会自动变成fixed*/
     /*position: sticky;*/
     /*top:44px;*/
   }

@@ -1,7 +1,10 @@
 <template>
   <div class="productItem" @click="productClick">
       <a href="javascript:">
-          <div class="imgDiv"><img :src="itemData.show.img" alt="" class="itemImage" @load="loadOK"></div>
+          <div class="imgDiv">
+            <img  v-if="itemData.show" :src="itemData.show.img" alt="" class="itemImage" @load="loadOK">
+            <img  v-if="itemData.image" :src="itemData.image" alt="" class="itemImage" @load="loadOK">
+          </div>
           <div><span class="itemTitle">{{itemData.title}}</span></div>
           <div class="textData">
             <span>{{itemData.price}}</span>
@@ -14,27 +17,29 @@
 </template>
 
 <script>
+
 export default {
 name: "Product",
   props:{
-  itemData:{
-    type:Object,
-    default(){
-      return {}
+    itemData:{
+      type:Object,
+      default(){
+        return {}
+      }
     }
-  }
   },
+
   methods:{
   loadOK(){
-  //  往事件总线中发射事件
+  //  图片加载完成，往事件总线中发射事件，要求refresh
     this.$bus.$emit('timeToRefresh');
   },
     //点击商品时，进入详情页面
     productClick(){
-      console.log('进入商品详情页面');
       this.$router.push('/detail/'+this.itemData.iid);
     }
   }
+
 }
 </script>
 

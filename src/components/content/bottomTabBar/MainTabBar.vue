@@ -13,7 +13,7 @@
         <div slot = "tag">分类</div>
       </tab-bar-item>
 
-      <tab-bar-item  path="/shop" setColor = 'red'>
+      <tab-bar-item  path="/shop" setColor = 'red' @click.native="refreshData">
         <img slot = "img1" src="../../../assets/img/tabbar/shopcart.svg" alt="">
         <img slot = "img2" src="../../../assets/img/tabbar/shopcart_active.svg" alt="">
         <div slot = "tag">购物车</div>
@@ -36,6 +36,11 @@ export default {
   components:{
     TabWrap,
     TabBarItem
+  },
+  methods:{
+    refreshData(){
+      this.$bus.$emit('shopCarHeightRefresh');
+    }
   }
 }
 </script>

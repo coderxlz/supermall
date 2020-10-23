@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <product-item v-for="item in proLists" :item-data="item" />
+  <div class="productWrap">
+    <product-item
+        v-for="item in proLists"
+        :item-data="item"/>
   </div>
 </template>
 
@@ -15,7 +17,7 @@ name: "ProductWrap",
    proLists:{
      type:Array,
      default(){
-       return []
+       return [];
      }
    }
   },
@@ -23,5 +25,10 @@ name: "ProductWrap",
 </script>
 
 <style scoped>
-
+  .productWrap{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: #fff;
+  }
 </style>
