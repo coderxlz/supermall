@@ -1,8 +1,8 @@
 <template>
   <div class="productWrap">
     <product-item
-        v-for="item in proLists"
-        :item-data="item"/>
+        v-for="(item,proType) in proLists"
+        :item-data="item" :key="setKey()+proType"/>
   </div>
 </template>
 
@@ -21,6 +21,11 @@ name: "ProductWrap",
      }
    }
   },
+  methods: {
+    setKey(){
+      return new Date().getTime();
+    }
+  }
 }
 </script>
 
@@ -30,5 +35,7 @@ name: "ProductWrap",
     flex-wrap: wrap;
     justify-content: space-around;
     background-color: #fff;
+    width: 100vw;
+    border-radius: 5px;
   }
 </style>

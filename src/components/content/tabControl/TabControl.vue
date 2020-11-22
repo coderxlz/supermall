@@ -1,6 +1,6 @@
 <template>
     <div  class="tabControl">
-      <a href="javascript:;" v-for="(item,index) in tabs" class="controlItem" @click="itemClick(index)">
+      <a href="javascript:;" v-for="(item,index) in tabs" :key="index" class="controlItem" @click="itemClick(index)">
         <div :class="{itemOnClick:currentIndex === index}">
           <span>{{item}}</span>
         </div>
@@ -34,6 +34,9 @@ name: "TabControl",
       //向父组件发射事件，用户点击控制栏按钮，index值改变，显示商品改变
       this.$emit('productChange',index);
 
+    },
+    getKey(){
+      return new Date().getTime().toString();
     }
   }
 }
@@ -42,6 +45,7 @@ name: "TabControl",
 <!--scoped表示当前样式只在当前页面生效-->
 <style scoped>
   .tabControl{
+    font-size: 14px;
     width: 100%;
     height: 44px;
     display: flex;

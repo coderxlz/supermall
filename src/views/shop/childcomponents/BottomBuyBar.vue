@@ -7,7 +7,7 @@
                     :ifChecked = '$store.state.carItems.length>0'/>全选
       <span>合计：￥{{totalPrice}}</span>
     </div>
-    <div class="calc">去计算({{itemLength}})</div>
+    <div class="calc" @click="calc">去计算({{itemLength}})</div>
   </div>
 </template>
 
@@ -28,6 +28,11 @@ export default {
     //点击全选按钮时，设置所有商品对象中的checked属性为true
     allChecked(){
       this.$store.commit('allChecked',this.$refs.selectAll.check);
+    },
+    //点击去计算按钮，如果没有商品，显示toast
+    calc(){
+      if(this.$store.state.carItems.length===0)
+        this.$toast.show('您还没有选购商品');
     }
   },
   mounted() {

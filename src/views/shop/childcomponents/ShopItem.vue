@@ -1,7 +1,7 @@
 <template>
 
   <div class="shopItem" v-if="itemData.length !== 0">
-    <div class="itemWrap" v-for="item in itemData">
+    <div class="itemWrap" v-for="(item,index) in itemData" :key="index">
 
       <radio-button :ifChecked = 'item.checked'
                     @click.native="changeState(item)"/>

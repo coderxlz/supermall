@@ -23,7 +23,7 @@
       </div>
 
       <div class="wrap" id = "right">
-          <div v-for="item in shopInfo.scores">
+          <div v-for="(item,index) in shopInfo.scores" :key="index">
             <span class="sellFont">{{item.name}}</span>
             <span class="scores" :class="{active:item.isBetter}">{{item.score}}</span>
             <span v-if="item.isBetter" class="sellFont high">高</span>

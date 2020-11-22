@@ -4,14 +4,14 @@
 <!-- 使用表格时加上table标签 -->
       <table>
 
-        <tr v-for="item in sizeInfo">
-          <td v-for="list in item" >{{list}}</td>
+        <tr v-for="(item,index) in sizeInfo" :key="index">
+          <td v-for="(list,index) in item" :key="index">{{list}}</td>
         </tr>
       </table>
 
       <table class="patternInfo">
-        <tr v-for="item in patternInfo">
-          <td  v-for="list in item">{{list}}</td>
+        <tr v-for="(item,index) in patternInfo" :key="index">
+          <td  v-for="(list,index) in item" :key="index">{{list}}</td>
         </tr>
       </table>
 

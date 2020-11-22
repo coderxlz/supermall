@@ -2,8 +2,8 @@
   <div class="productItem" @click="productClick">
       <a href="javascript:">
           <div class="imgDiv">
-            <img  v-if="itemData.show" :src="itemData.show.img" alt="" class="itemImage" @load="loadOK">
-            <img  v-if="itemData.image" :src="itemData.image" alt="" class="itemImage" @load="loadOK">
+            <img  v-if="itemData.show" v-lazy="itemData.show.img" alt="" class="itemImage" @load="loadOK">
+            <img  v-if="itemData.image" v-lazy="itemData.image" alt="" class="itemImage" @load="loadOK">
           </div>
           <div><span class="itemTitle">{{itemData.title}}</span></div>
           <div class="textData">
@@ -45,9 +45,7 @@ name: "Product",
 
 <style scoped>
   .productItem{
-    width: 150px;
-    height: 263px;
-    margin: 2px 0;
+    width: 46%;
     text-align: center;
     box-shadow: 1px 1px 1px rgba(0,0,0,.1);
   }
@@ -69,7 +67,6 @@ name: "Product",
 
   .textData{
     font-size: 14px;
-
   }
 
   .icon{

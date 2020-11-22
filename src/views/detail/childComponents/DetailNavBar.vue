@@ -7,7 +7,10 @@
 
         <div slot="center" class="lists">
 
-            <div @click="changeIndex(index)" v-for="(item,index) in lists" :class="{active:currentIndex === index}"  >
+            <div @click="changeIndex(index)" 
+            v-for="(item,index) in lists" 
+            :key="index"
+            :class="{active:currentIndex === index}"  >
               {{item}}
             </div>
 
@@ -50,7 +53,7 @@ name: "detailNavBar",
 <style scoped>
   .detailNavBar{
     position: fixed;
-    z-index: 9;
+    z-index: 999;
     background-color: #fff;
   }
 

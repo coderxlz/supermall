@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav-bar class="navbar">
-      <slot slot="center">购物街</slot>
+      <slot slot="center"><span>购物街</span></slot>
     </nav-bar>
 
     <tab-control
@@ -209,6 +209,10 @@ export default {
   computed:{
     //显示商品
     showProduct(){
+      //在把显示列表中的商品信息传递过去的同时将当前商品类型传递过去，与v-for中的key进行拼接，
+      //便于vue区分不同类型的key
+      console.log('------------',this.currentType);
+      this.controlData[this.currentType].list.proType = this.currentType;
       return this.controlData[this.currentType].list;
     },
 

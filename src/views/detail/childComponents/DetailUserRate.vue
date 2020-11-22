@@ -22,7 +22,8 @@
           <span class="font">{{detailUserInfo.list[0].style}}</span>
 
           <div class="commentImages">
-            <img  v-for="item in detailUserInfo.list[0].images"
+            <img  v-for="(item,index) in detailUserInfo.list[0].images"
+                  :key="index"
                   :src="item" alt=""></div>
 
         </div>

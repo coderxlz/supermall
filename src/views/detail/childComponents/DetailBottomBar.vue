@@ -39,7 +39,7 @@ name: "DetailBottomBar",
 <style scoped>
   .detailBottomBar{
     position: fixed;
-    z-index: 9;
+    z-index: 999;
     width: 100%;
     height: 59px;
     line-height: 59px;

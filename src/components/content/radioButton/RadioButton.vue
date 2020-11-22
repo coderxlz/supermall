@@ -41,6 +41,7 @@ name: "RadioButton",
     text-align: center;
     border: 1px solid #aaa;
     border-radius: 50%;
+    margin: 10px;
   }
 
   .active{

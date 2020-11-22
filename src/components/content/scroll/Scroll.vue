@@ -59,5 +59,9 @@ name: "Scroll",
 </script>
 
 <style scoped>
+  .wrap{
+    overflow: hidden;
 
+
+  }
 </style>
